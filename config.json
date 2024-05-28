@@ -1,0 +1,74 @@
+{
+    "postgresql":{
+        "service": "postgresql",
+        "hostname": "127.0.0.1",
+        "port": 5432,
+        "username": "postgres",
+        "password": "Lyx20020304",
+        "databaseName": "MobileNetwork"
+    },
+    "redis": {
+        "service": "redis",
+        "host": "127.0.0.1",
+        "port": 6379,
+        "expire_time": 3600
+    },
+    "database_tables":{
+        "all_tables": ["user_info"],
+        "users":{
+            "columns": ["id", "username", "password", "email", "phone", "address", "created_at", "updated_at"]
+        }
+    },
+    "logger": {
+        "version": 1,
+        "formatters": {
+            "simple": {
+                "format": "%(asctime)s - [%(filename)s:%(lineno)d] - %(levelname)s - %(message)s"
+            }
+        },
+        "handlers": {
+            "console": {
+                "class": "logging.StreamHandler",
+                "level": "DEBUG",
+                "formatter": "simple"
+            },
+            "file": {
+                "class": "logging.FileHandler",
+                "filename": "log/logging.log",
+                "level": "DEBUG",
+                "formatter": "simple",
+                "mode": "w"
+            }
+        },
+        "loggers":{
+            "StreamLogger": {
+                "handlers": ["console"],
+                "level": "DEBUG"
+            },
+            "FileLogger": {
+                "handlers": ["file"],
+                "level": "DEBUG"
+            }
+        }
+    },
+    "mail":{
+        "mail_server": "smtp.qq.com",
+        "mail_use_ssl": true,
+        "mail_use_tls": false,
+        "mail_port": 465,
+        "mail_username": "1421636344@qq.com",
+        "mail_password": "ojvplsnfknpwjada",
+        "mail_default_sender": "AI Translator",
+        "expire_time": 3600
+    },
+    "statusCode": {
+        "success": 0,
+        "error": -1
+    },
+    "session":{
+        "secret_key": "wduw0u0wefiownginuf928firuehorijqg"
+    },
+    "LLM":{
+        "api_key": "f2c133d90f50088895272cdcb6592537.0nQxI3hSeqz84ORy"
+    }
+}
