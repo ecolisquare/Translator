@@ -5,40 +5,42 @@ import axios from 'axios';
 
 const Login = () => {
     const [form] = Form.useForm();
-
+    var debug = false;
     const handleSubmit = async (values) => {
         console.log(values);
         const userId = values.username;
         const url = `http://localhost:5174?userId=${userId}`;
-        window.location.href = url;
-        //     axios.interceptors.request.use(request => {
-        //     console.log('Starting Request');
-        //     console.log('URL:', request.url);
-        //     console.log('Method:', request.method);
-        //     console.log('Headers:', JSON.stringify(request.headers, null, 2));
-        //     console.log('Data:', request.data);
-        //     return request;
-        // }, error => {
-        //     console.error('Request Error:', error);
-        //     return Promise.reject(error);
-        // });
+        // window.location.href = url;
+        if (debug) {
+            axios.interceptors.request.use(request => {
+                console.log('Starting Request');
+                console.log('URL:', request.url);
+                console.log('Method:', request.method);
+                console.log('Headers:', JSON.stringify(request.headers, null, 2));
+                console.log('Data:', request.data);
+                return request;
+            }, error => {
+                console.error('Request Error:', error);
+                return Promise.reject(error);
+            });
+        }
     
-        // try {
-        //     const response = await axios.post('/auth/login', {
-        //         username: values.username,
-        //         password: values.password,
-        //     });
+        try {
+            const response = await axios.post('api/auth/login', {
+                username: values.username,
+                password: values.password,
+            });
     
-        //     if (response.data.status["statusCode"] === 0) {
-        //         const url = `http://localhost:5174?userId=${userId}`;
-        //         // 跳转到指定的URL
-        //         window.location.href = url;
-        //     } else {
-        //         alert(response.data.status["message"]);
-        //     }
-        // } catch (error) {
-        //     console.error('Error in request:', error);
-        // }
+            if (response.data.status["statusCode"] === 0) {
+                const url = `http://localhost:5174?userId=${userId}`;
+                // 跳转到指定的URL
+                window.location.href = url;
+            } else {
+                alert(response.data.status["message"]);
+            }
+        } catch (error) {
+            console.error('Error in request:', error);
+        }
     };
 
     return (
