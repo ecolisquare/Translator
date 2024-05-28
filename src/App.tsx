@@ -6,30 +6,18 @@ import ForgetPassword from './components/ForgetPassword';
 
 const App = () => {
   return (
-    <Router>
-      <div>
-        {/* <nav>
-          <ul>
-            <li>
-              <Link to="/login">登录</Link>
-            </li>
-            <li>
-              <Link to="/register">快速注册</Link>
-            </li>
-            <li>
-              <Link to="/forget-password">忘记密码</Link>
-            </li>
-          </ul>
-        </nav> */}
-
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/forget_password" element={<ForgetPassword />} />
-          <Route path="/" element={<Login />} />
-        </Routes>
-      </div>
-    </Router>
+    <div className='overflow-hidden w-full h-full relative'>
+      <Router>
+        <div className="h-full">
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            {/* <Route path="/forget_password" element={<ForgetPassword />} /> */}
+            <Route path="/" element={<Login />} />
+          </Routes>
+        </div>
+      </Router>
+    </div>
   );
 };
 
