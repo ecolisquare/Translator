@@ -4,14 +4,14 @@ import { createProxyMiddleware } from 'http-proxy-middleware';
 
 export default defineConfig({
   plugins: [react()],
-  // server: {
-  //   port: 5173,
-  //   proxy: {
-  //     '/auth': {
-  //       target: 'https://www.baidu.com/',
-  //       changeOrigin: true,
-  //       rewrite: (path) => path.replace(/^\/auth/, '/auth')
-  //     }
-  //   }
-  // }
+  server: {
+    port: 5173,
+    proxy: {
+      '/api': {
+        target: 'http://10.219.174.164:5000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      }
+    }
+  }
 });

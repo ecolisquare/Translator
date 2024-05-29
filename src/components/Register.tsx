@@ -7,59 +7,65 @@ import axios from 'axios';
 const Register = () => {
     const [form] = Form.useForm();
     const [isCodeButtonDisabled, setIsCodeButtonDisabled] = useState(true);
-    const [isverify,setIsverify] = useState(false);
-    const verification = "";
+    const [isVerify, setIsVerify] = useState(false);
+    const [verification, setVerification] = useState('');
 
     const handleSubmit = (values: any) => {
-        // 验证通过后的处理逻辑，可以将表单数据存储至React Redux和localStorage
         console.log(values);
-        // if(verification == values.verificationCode){
-        //     setIsverify(true);
-        // }
-        // axios.post('/register', {
-        //     username: values.username,
-        //     password: values.password,
-        //     email: values.email,
-        //   })
-        //   .then(res => {
-        //     if(res.data.status["code"] === 200 && isverify){
-        //        alert("注册成功！")
-        //     }
-        //     else{
-        //         alert(res.data.status["message"])
-        //     }
-        //   })
-        //   .catch(err => {
-        //     // 前后端传输数据错误，参照react标准处理
-        //     console.log(err);
-        //   })
+        console.log(verification);
+        if (verification === values.verificationCode) {
+            setIsVerify(true);
+        } else {
+            alert("验证码错误");
+            return;
+        }
+
+        axios.post('/register', {
+            username: values.username,
+            password: values.password,
+            email: values.email,
+        })
+        .then(res => {
+            if (res.data.status.code === 200 && isVerify) {
+                alert("注册成功！");
+            } else {
+                alert(res.data.status.message);
+            }
+        })
+        .catch(err => {
+            console.log(err);
+        });
     };
 
     const handleEmailChange = (e) => {
         const email = e.target.value;
+        form.setFieldsValue({ email });
         setIsCodeButtonDisabled(false);
     };
 
     const handleSendCode = () => {
-        // 发送验证码逻辑
-        console.log('Sending verification code...');
-        // axios.post('/verification', {
-        //     email: values.email,
-        //   })
-        //   .then(res => {
-        //     if(res.data.status["code"] === 200){
-        //        alert("验证码已发送！")
-        //        verification = res.data.data["captcha"]
-        //     else{
-        //         alert(res.data.status["message"])
-        //     }
-        //   })
-        //   .catch(err => {
-        //     // 前后端传输数据错误，参照react标准处理
-        //     console.log(err);
-        //   })
-    };
+        const email = form.getFieldValue('email');
+        if (!email) {
+            alert("请先输入邮箱");
+            return;
+        }
 
+        console.log('Sending verification code...');
+        axios.post('/verification', {
+            email: email,
+        })
+        .then(res => {
+            if (res.data.status.code === 200) {
+                alert("验证码已发送！");
+                setVerification(res.data.data.captcha);
+            } else {
+                alert(res.data.status.message);
+            }
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    };
 
     return (
         <div className="form_container">
@@ -94,7 +100,9 @@ const Register = () => {
                     <Form.Item
                         name="verificationCode"
                         className='verificationCode'
-                        rules={[{ required: true, message: '请输入验证码' }]}
+                        rules={[{ required: true, message: '请输入验证码' },
+                                { len: 6, message: '验证码必须为6位' },
+                        ]}
                     >
                         <Input placeholder="请输入验证码"/>
                     </Form.Item>
@@ -115,10 +123,8 @@ const Register = () => {
                         { required: true, message: '请输入密码' },
                         { min: 6, message: '密码最少6位' },
                         {
-                            // pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
-                            // message: '密码需包含至少1个大写字母、1个小写字母、1个数字和1个特殊字符',
                             pattern: /^(?:\d+|[a-zA-Z]+|[a-zA-Z\d]+)$/i,
-                            message: '用户名为纯数字、纯英文字母或数字与英文字母组合',
+                            message: '密码为纯数字、纯英文字母或数字与英文字母组合',
                         },
                     ]}
                 >
@@ -130,8 +136,7 @@ const Register = () => {
                     </Button>
                 </Form.Item>
                 <div className='toRouter'>
-                    {/* <Link to="/forget_password">忘记密码</Link> */}
-                    <span>已有账号?<Link to="/login" >马上登录</Link></span>
+                    <span>已有账号?<Link to="/login">马上登录</Link></span>
                 </div>
             </Form>
         </div>
