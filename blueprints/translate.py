@@ -2,7 +2,7 @@ from flask import Blueprint
 from flask import request, session, g
 from flask_mail import Message
 from extensions.MailService import MailService
-from .blueprints_utils import generate_random_number_str, wrap_ret_json, wrap_ret_status
+from .blueprints_utils import wrap_ret_json, wrap_ret_status, wrap_llm_response
 import logging
 import json
 import sys
@@ -19,11 +19,12 @@ bp = Blueprint('translate', __name__, url_prefix='/translate')
 def translate():
     client = LLMClient.get_instance()
     params = json.loads(request.get_data())
-    db = PostgresqlDatabase.get_instance()
-    username = session["username"]
-    style = db.get_item("preferences", pkeyname='username', pkeyvalue=username)[1]
-    ans = client.translate(params['text'], params['source_language'], params['target_language'], style=style)
-    if params['text'] != "" and ans == "":
+    # db = PostgresqlDatabase.get_instance()
+    # username = session["username"]
+    # user_preference = db.get_item("preferences", pkeyname='username', pkeyvalue=username)[1]
+    data = client.translate(params['target_language'], params['messages'])
+    return wrap_llm_response(data)
+    if ans['text'] != "" and ans == "":
         status = wrap_ret_status(ERROR, "LLM API error. Failed to translate.")
     else:
         status = wrap_ret_status(SUCCESS)

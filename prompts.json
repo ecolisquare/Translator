@@ -1,0 +1,48 @@
+{
+    "value":[
+        {
+            "language": ["default", "English"],
+            "translate":{
+                "defaultMessage": "You are asked to translate the following text into <INPUT 0>. The translation should be accurate and natural.",
+                "init_prompt": "There will be two pieces of text given by USER, namely '<PREV_TEXT>' and '<CURR_TEXT>'.'<PREV_TEXT>' and '<CURR_TEXT>' are originally consequent text. '<CURR_TEXT>' is formatted as '[<$number>][text_to_translate]'. You need to translate the text in '<CURR_TEXT>', considering the context and coreference in '<PREV_TEXT>' if it is not None. The text after the $number at the very beginning should be translated. Remember to place '\n' in the correct position if needed. After this, you should summarize the information in your translation and form a chuck_context, for the following tasks to reference. The context should not exceeds 500 tokens.",
+                "context_prompt": "And there will be two pieces of text given by the USER named '<PARA_CONTEXT>' and '<GLOBAL_CONTEXT>'. '<PARA_CONTEXT>' contains the idea of the last paragraph. '<GLOABAL_CONTEXT>' contains the idea of all seen texts. Adjust your tranlation result according to them if they are not None. ",
+                "style_prompt": "The text should be tranlated in a <INPUT 0> style.",
+                "user_dict_prompt": "Note that you should translate these words in this way: <INPUT 0>",
+                "translate_prompt": "Here is the USER input:",
+                "input_context_prompt": "<PARA_CONTEXT>:<INPUT 0>\n<GLOABAL_CONTEXT>:<INPUT 1>",
+                "input_text_prompt": "<PREV_TEXT>:<INPUT 0>\n<CURR_TEXT>:[$<INPUT 1>][<INPUT 2>]",
+                "format_prompt": "Return in JSON, which has the structure as {\"chunk_num\":the given number in '<CURR_TEXT>', \"text\":the tranlated text, \"chunk_context\":the concluded chunk_context}.  Don't add any extra information. Just return JSON."
+            },
+            "summary":{
+                "defaultMessage": "You are asked to summarize some texts from a passage. The summarization should be precise and short.",
+                "init_prompt": "There will be a global text given by the USER named '<GLOBAL_CONTEXT>', which contains the idea of all the seen paragraphs from the passage. And there will be some 'CHUNK_CONTEXT', which summarize different chunks in the same paragraph. Your task is to generate the idea of the paragraph named <PARA_CONTEXT> from those CHUNK_CONTEXT, and try to update <GLOBAL_CONTEXT> according to the idea you just generated. You need to return these 2 contexts.",
+                "summarize_idea_prompt": "The input given by the USER is formatted as <GLOABAL_CONTEXT>: Global idea. <CHUNK_CONTEXT_1>: Chunk 1 idea. ...\n <CHUNK_CONTEXT_N>: Chunk N idea\n. Here is the USER input:",
+                "input_context_prompt": "<GLOABAL_CONTEXT>:<INPUT 0>\n<INPUT 1>",
+                "format_prompt": "Return in JSON, which has the structure as {\"PARA_CONTEXT\":the concluded context, \"GLOBAL_CONTEXT\":the updated global context}. Don't add any extra information before or after the given structure."
+            }
+            
+        },
+        {
+            "language": "French",
+            "translate":{
+                "defaultMessage": "Qu'on renvoie cette petite, criait-il, je n'entends pas qu'elle reste ici! J'y étais avant elle! qu'elle sorte de la maison.",
+                "init_prompt": "M. Nizerolles, attiré par le bruit, sortit de son cabinet, et prenant le petit furieux dans ses bras, il lui dit.",
+                "context_prompt": "Ta soeur ne quittera pas la maison, mauvais garnement, mais ce sera toi. Puisque nous ne savons pas t'élever, je vais te mettre en meilleures mains; car ici tu deviendrais un mauvais sujet. ",
+                "style_prompt": "On attela la voiture, et, malgré les prières de Mme Nizerolles et les larmes de la bonne, le père de Charles le conduisit au lycée de la ville voisine où ils arrivèrent le soir très-tard.",
+                "user_dict_prompt": "Monsieur, dit M. Nizerolles au proviseur, je vous amène l'enfant le plus mal élevé que vous ayez jamais eu sous votre direction. Comme au fond il n'est ni sot ni méchant, j'espère que vous en ferez un garçon supportable; et, pour y parvenir, je vous autorise à user de toute la rigueur que vous jugerez convenable. Et toi, Charles, rappelle-toi que tu ne me reverras que quand M. le proviseur m'assurera que tu mérites l'affection que nous avions pour toi: <INPUT 0>.",
+                "translate_prompt": "On ne donne pas de sucre ici, monsieur:\n",
+                "input_context_prompt": "<PARA_CONTEXT>:<INPUT 0>\n<GLOABAL_CONTEXT>:<INPUT 1>\n",
+                "input_text_prompt": "<PREV_TEXT>:<INPUT 0>\n<CURR_TEXT>:[$<INPUT 1>][<INPUT 2>]\n",
+                "format_prompt": "Return in JSON, which has the structure as{\"chunk_num\":the given number in '<CURR_TEXT>', \"text\":the tranlated text, \"chunk_context\":the concluded chunk_context}.  Don't add any extra information. Just return JSON."
+            },
+            "summary":{
+                "defaultMessage": "You are asked to summarize some texts from a passage. The summarization should be precise and short.",
+                "init_prompt": "There will be a global text given by the USER named '<GLOBAL_CONTEXT>', which contains the idea of all the seen paragraphs from the passage. And there will be some 'CHUNK_CONTEXT', which summarize different chunks in the same paragraph. Your task is to generate the idea of the paragraph named <PARA_CONTEXT> from those CHUNK_CONTEXT, and try to update <GLOBAL_CONTEXT> according to the idea you just generated. You need to return these 2 contexts.",
+                "summarize_idea_prompt": "The input given by the USER is formatted as <GLOABAL_CONTEXT>: Global idea. <CHUNK_CONTEXT_1>: Chunk 1 idea. ...\n <CHUNK_CONTEXT_N>: Chunk N idea\n. Here is the USER input:\n",
+                "input_context_prompt": "<GLOABAL_CONTEXT>:<INPUT 0>\n<INPUT 1>\n",
+                "format_prompt": "Return in JSON, which has the structure as{\"PARA_CONTEXT\":the concluded context, \"GLOBAL_CONTEXT\":the updated global context}.  Don't add any extra information. Just return JSON."
+            }
+            
+        }
+    ]
+}

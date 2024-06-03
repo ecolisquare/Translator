@@ -162,3 +162,4 @@ log/
 migrations/
 test/
 post_test.ipynb
+node_modules/

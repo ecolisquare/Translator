@@ -68,16 +68,27 @@ class PostgresqlDatabase:
         columns = ','.join(item.keys())
         values = list(item.values())
         for i in range(len(values)):
-            values[i] = "'" + values[i] + "'"
+            if type(values[i]) == list:
+                values[i] = self._generate_array(values[i])
+            else:
+                values[i] = "'" + values[i] + "'"
         values = ','.join(values)
         sql = """INSERT INTO {tableName}({columns}) VALUES({values});""".format(tableName=tableName, columns=columns, values=values)
         return self._excute(sql, values)
 
     # return new item dict if succeeded, None if failed.
-    def get_item(self, tableName: str, pkeyname, pkeyvalue) -> Optional[dict]:
+    # To do: consider array
+    def get_item(self, tableName: str, pkeyname, pkeyvalue, conditions: dict = None):
         if pkeyvalue is not None:
             pkeyvalue = "'" + pkeyvalue + "'"
-            sql = """SELECT * FROM {tableName} WHERE {keyname}={keyvalue};""".format(tableName=tableName, keyname=pkeyname, keyvalue=pkeyvalue)
+            if conditions is not None:
+                sql = """SELECT * FROM {tableName} WHERE {pkeyname}={pkeyvalue}""".format(tableName=tableName, pkeyname=pkeyname, pkeyvalue=pkeyvalue, conditions=conditions)
+                for key, value in conditions.items():
+                    condition = " AND '" + key + "'='" + value + "'"
+                    sql += condition
+                sql += ";"
+            else:
+                sql = """SELECT * FROM {tableName} WHERE {keyname}={keyvalue};""".format(tableName=tableName, keyname=pkeyname, keyvalue=pkeyvalue)
             res = self._excute(sql, (pkeyvalue,), fetchResult=True)
             return res[0] if len(res) > 0 else None
 
@@ -89,8 +100,15 @@ class PostgresqlDatabase:
         setVals = ','.join([f"{key}={value}" for key, value in item.items()])
         sql = """UPDATE {tableName} set {setVals} WHERE {pkeyname}={pkeyvalue};""".format(tableName=tableName, setVals=setVals, pkeyname=pkeyname, pkeyvalue=pkeyvalue)
         return self._excute(sql, tuple([*item.values(), pkeyvalue]))
-        
+    
+    def _generate_array(self, array: list) -> str:
+        ret = "'{"
+        for i in range(len(array) - 1):
+            ret += '"' + array[i] + '",'
 
+        ret += '"' + array[-1] + '"}'
+        ret += "'"
+        return ret
     # def insert_item(self, tableName: str, item: dict) -> Optional[int]:
     #     id = -1
     #     if tableName == user_table_name :

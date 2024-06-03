@@ -2,7 +2,7 @@ from flask import Blueprint
 from flask import request, session, g
 from flask_mail import Message
 from extensions.MailService import MailService
-from .blueprints_utils import generate_random_number_str, wrap_ret_json, wrap_ret_status
+from .blueprints_utils import wrap_ret_json, wrap_ret_status, generate_random_str
 import logging
 import json
 import sys
@@ -46,7 +46,7 @@ def register():
 @bp.route("/email_captcha", methods=["POST"])
 def send_captcha():
     email = json.loads(request.get_data())["email"]
-    captcha = generate_random_number_str(6)
+    captcha = generate_random_str(6, '1234567890')
     mailService = MailService.get_instance()
     mailService.send_mail(subject="Verify your account", recipients=[email], body=f"Your verification code is {captcha}")
     fileLogger = logging.getLogger("FileLogger")

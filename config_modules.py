@@ -8,11 +8,6 @@ from extensions.ext import db
 from extensions.LLMClient import LLMClient
 from extensions.MailService import MailService
 
-if False:
-    from openai import OpenAI as LLM
-else:
-    from zhipuai import ZhipuAI as LLM
-
 def config_postgresql_database(app: Flask, filename: str = "config.json") -> Optional[PostgresqlDatabase]:
     try:
         with open(filename, 'r') as f:
@@ -66,12 +61,21 @@ def config_session(app : Flask, filename: str = "config.json"):
     except KeyError:
         logging.getLogger("StreamLogger").error("Session config file is missing keys!")
 
-def config_openai_client(model_name: str = "gpt-3.5-turbo", filename: str = "config.json"):
+def config_openai_client(filename: str = "config.json"):
     try:
         with open(filename, 'r') as f:
             config_data = json.load(f)["LLM"]
+            service_name = config_data["service"]
+            config_data = config_data[service_name]
+            if service_name == "OpenAI":
+                from openai import OpenAI as LLM
+            elif service_name == "ZhipuAI":
+                from zhipuai import ZhipuAI as LLM
+            else:
+                logging.getLogger("StreamLogger").error(f"Invalid service name:{service_name}")
+                return None
             _client = LLM(api_key=config_data["api_key"])
-            client = LLMClient(_client, model_name=model_name)
+            client = LLMClient(_client, service_name, model_name=config_data["model_name"], embedding_model_name=config_data["embedding_model_name"], max_token_per_chunk=config_data["max_token_per_chunk"], model_config=config_data["model_config"])
             return client
     except FileNotFoundError:
         logging.getLogger("StreamLogger").error("LLM Config file not found!")

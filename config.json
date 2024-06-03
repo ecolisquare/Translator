@@ -69,6 +69,28 @@
         "secret_key": "wduw0u0wefiownginuf928firuehorijqg"
     },
     "LLM":{
-        "api_key": "f2c133d90f50088895272cdcb6592537.0nQxI3hSeqz84ORy"
+        "service": "ZhipuAI",
+        "OpenAI":{
+            "api_key": "",
+            "model_name": "gpt-3.5-turbo",
+            "embedding_model_name": "text-embedding-ada-002",
+            "max_token_per_chunk": 512,
+            "model_config": {
+                "top_p": 1.0,
+                "frequency_penalty": 0.0,
+                "presence_penalty": 0.0,
+                "max_tokens": 4000
+            }
+        },
+        "ZhipuAI": {
+            "api_key": "",
+            "model_name": "glm-4",
+            "embedding_model_name": "embedding-2",
+            "max_token_per_chunk": 512,
+            "model_config": {
+                "top_p": 1.0,
+                "max_tokens": 4000
+            }
+        }
     }
 }
