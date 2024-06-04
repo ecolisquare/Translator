@@ -16,12 +16,18 @@ def usage():
 def analyse_opt(opt: List[Tuple]):
     if len(opt[0]) == 0:
         return
+    ret = {}
     for o, a in opt:
-        if o in ('-h', '--help'):
+        if o in ('-x', '--help'):
             usage()
         if o in ('-i', '--initdb'):
             os.system("flask db migrate")
             os.system("flask db upgrade")
+        elif o in ('-h', "--host"):
+            ret["host"] = a
+        elif o in ('-p', "--port"):
+            ret["port"] = a
+    return ret
             
 def estimate_token_num(text: str, modelname: str) -> int:
     try:

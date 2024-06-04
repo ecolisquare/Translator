@@ -48,13 +48,15 @@ if __name__ == '__main__':
     mail = config_mail(app)
 
     try:
-        ret = getopt(sys.argv[1:], "hi", ["help", "init"])
-        analyse_opt(ret)
+        ret = getopt(sys.argv[1:], "xih:p:", ["help", "init", "host=", "port="])
+        ret = analyse_opt(ret)
     except GetoptError:
         print("Error: unknown arguments")
         usage()
         sys.exit(1)
 
-    app.run(host="127.0.0.1", port=5000, debug=True)
+    host = ret.get("host", "127.0.0.1")
+    port = ret.get("port", 5000)
+    app.run(host=host, port=port, debug=True)
     db.disconnect()
 
